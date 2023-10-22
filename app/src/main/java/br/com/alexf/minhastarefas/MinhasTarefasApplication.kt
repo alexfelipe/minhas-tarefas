@@ -1,7 +1,7 @@
 package br.com.alexf.minhastarefas
 
 import android.app.Application
-import br.com.alexf.minhastarefas.di.appModules
+import br.com.alexf.minhastarefas.di.appModule
 import br.com.alexf.minhastarefas.di.storageModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +16,7 @@ class MinhasTarefasApplication : Application() {
             androidLogger(Level.DEBUG)
             androidContext(this@MinhasTarefasApplication)
             modules(
-                appModules,
+                appModule,
                 storageModule
             )
         }
