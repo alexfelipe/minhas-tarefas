@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +16,7 @@ import br.com.alexf.minhastarefas.ui.states.TasksListUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 import br.com.alexf.minhastarefas.ui.viewmodels.TaskFormViewModel
 import br.com.alexf.minhastarefas.ui.viewmodels.TasksListViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -39,13 +41,16 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("taskForm") {
+                        val scope = rememberCoroutineScope()
                         val viewModel = koinViewModel<TaskFormViewModel>()
                         val uiState by viewModel.uiState.collectAsState()
                         TaskFormScreen(
                             uiState = uiState,
                             onSaveClick = {
-                                viewModel.save()
-                                navController.popBackStack()
+                                scope.launch {
+                                    viewModel.save()
+                                    navController.popBackStack()
+                                }
                             })
                     }
                 }

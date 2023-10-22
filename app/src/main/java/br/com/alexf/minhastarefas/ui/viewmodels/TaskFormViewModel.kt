@@ -33,7 +33,7 @@ class TaskFormViewModel(
         }
     }
 
-    fun save() {
+    suspend fun save() {
         with(_uiState.value) {
             repository.save(
                 Task(
