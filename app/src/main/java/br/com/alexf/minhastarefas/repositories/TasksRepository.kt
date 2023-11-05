@@ -4,10 +4,6 @@ import br.com.alexf.minhastarefas.database.dao.TaskDao
 import br.com.alexf.minhastarefas.database.entities.TaskEntity
 import br.com.alexf.minhastarefas.models.Task
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
 class TasksRepository(
@@ -25,6 +21,14 @@ class TasksRepository(
             .toTaskEntity()
         dao.save(entity)
     }
+
+    suspend fun delete(id: String) {
+        dao.delete(
+            TaskEntity(id = id, title = "")
+        )
+    }
+
+    fun findById(id: String) = dao.findById(id)
 
 }
 

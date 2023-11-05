@@ -5,5 +5,6 @@ data class TaskFormUiState(
     val description: String = "",
     val topAppBarTitle: String = "",
     val onTitleChange: (String) -> Unit = {},
-    val onDescriptionChange: (String) -> Unit = {}
+    val onDescriptionChange: (String) -> Unit = {},
+    val isDeleteEnable: Boolean = false,
 )

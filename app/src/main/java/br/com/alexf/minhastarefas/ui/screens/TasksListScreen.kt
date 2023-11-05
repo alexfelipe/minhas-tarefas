@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.samples.generators.generateRandomTasks
 import br.com.alexf.minhastarefas.ui.states.TasksListUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
@@ -40,7 +41,8 @@ import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 fun TasksListScreen(
     uiState: TasksListUiState,
     modifier: Modifier = Modifier,
-    onNewTaskClick: () -> Unit = {}
+    onNewTaskClick: () -> Unit = {},
+    onTaskClick: (Task) -> Unit = {},
 ) {
     Box(modifier) {
         ExtendedFloatingActionButton(
@@ -60,7 +62,8 @@ fun TasksListScreen(
         }
         LazyColumn(Modifier.fillMaxSize()) {
             items(uiState.tasks) { task ->
-                Row(Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth()
+                    .clickable { onTaskClick(task) }) {
                     Box(
                         Modifier
                             .padding(

@@ -1,6 +1,8 @@
 package br.com.alexf.minhastarefas.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,18 +11,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 
@@ -28,7 +35,8 @@ import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 fun TaskFormScreen(
     uiState: TaskFormUiState,
     modifier: Modifier = Modifier,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Column(modifier) {
         Box(
@@ -36,24 +44,50 @@ fun TaskFormScreen(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Row(Modifier.fillMaxWidth()) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xff68ddff)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = uiState.topAppBarTitle,
-                    Modifier.weight(1f)
+                    Modifier
+                        .weight(1f)
+                        .padding(8.dp),
+                    fontSize = 20.sp
                 )
                 Row(
                     modifier
-                        .padding(8.dp)
-                        .clickable { onSaveClick() }) {
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (uiState.isDeleteEnable) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = "Delete task icon",
+                            Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    onDeleteClick()
+                                }
+                                .padding(4.dp)
+                        )
+                    }
                     Icon(
                         Icons.Filled.Done,
-                        contentDescription = "Save task icon"
+                        contentDescription = "Save task icon",
+                        Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                onSaveClick()
+                            }
+                            .padding(4.dp)
                     )
-                    Spacer(Modifier.size(4.dp))
-                    Text(text = "Save")
                 }
             }
         }
+        Spacer(modifier = Modifier.size(8.dp))
         val title = uiState.title
         val description = uiState.description
         val titleFontStyle = TextStyle.Default.copy(fontSize = 24.sp)
@@ -106,8 +140,26 @@ fun TaskFormScreen(
 fun TaskFormScreenPreview() {
     MinhasTarefasTheme {
         TaskFormScreen(
-            uiState = TaskFormUiState(),
-            onSaveClick = {}
+            uiState = TaskFormUiState(
+                topAppBarTitle = "Criando tarefa"
+            ),
+            onSaveClick = {},
+            onDeleteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TaskFormScreenWithEditModePreview() {
+    MinhasTarefasTheme {
+        TaskFormScreen(
+            uiState = TaskFormUiState(
+                topAppBarTitle = "Editando tarefa",
+                isDeleteEnable = true
+            ),
+            onSaveClick = {},
+            onDeleteClick = {},
         )
     }
 }
