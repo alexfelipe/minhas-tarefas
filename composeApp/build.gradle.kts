@@ -41,6 +41,7 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             api(libs.precompose)
+            api(libs.precompose.viewmodel)
         }
     }
 }
