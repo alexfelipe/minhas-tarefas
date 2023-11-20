@@ -2,6 +2,8 @@ package repositories
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import models.Task
 
@@ -12,7 +14,7 @@ class TasksRepository {
     fun toggleIsDone(id: String) {
         _tasks.update { tasks ->
             tasks.map { task ->
-                if(id == task.id) {
+                if (id == task.id) {
                     task.copy(isDone = !task.isDone)
                 } else {
                     task
@@ -21,13 +23,25 @@ class TasksRepository {
         }
     }
 
+    fun findById(id: String): Task? =
+        _tasks.value.firstOrNull { it.id == id }
+
+    fun save(task: Task) {
+        _tasks.update { tasks ->
+            tasks + task
+        }
+    }
+
+    fun delete(id: String) {
+        _tasks.update { tasks ->
+            tasks.filterNot {
+                it.id == id
+            }
+        }
+    }
+
     companion object {
-        private val _tasks = MutableStateFlow(
-            listOf(
-                Task(title = "titulo 1", description = "desc 2"),
-                Task(title = "titulo 3", description = "desc 4")
-            )
-        )
+        private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     }
 
 }
