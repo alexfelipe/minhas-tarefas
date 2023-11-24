@@ -1,17 +1,14 @@
 package br.com.alexf.repositories
 
+import br.com.alexf.database.dao.TaskDao
 import br.com.alexf.models.Task
 
-class TasksRepository {
+class TasksRepository(
+    private val dao: TaskDao = TaskDao()
+){
 
-    val tasks get() = _tasks.toList()
+    suspend fun tasks() = dao.findAll()
 
-    fun save(task: Task){
-        _tasks.add(task)
-    }
-
-    companion object {
-        private val _tasks = mutableListOf<Task>()
-    }
+    suspend fun save(task: Task) = dao.save(task)
 
 }
