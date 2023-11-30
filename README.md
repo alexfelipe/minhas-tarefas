@@ -5,6 +5,8 @@ App usado como exemplo para a criação de conteúdo no meu canal do YouTube �
 
 CRUD de tarefas e ação para marcar como feita ou não.
 
+![jetpack-compose-minhas-tarefas](https://github.com/alexfelipe/minhas-tarefas/assets/8989346/3fd14f8d-b0d7-4e6e-a860-46d9396ae331)
+
 jetpack-compose-minhas-tarefas
 
 ✔️ Técnicas e tecnologias utilizadas
