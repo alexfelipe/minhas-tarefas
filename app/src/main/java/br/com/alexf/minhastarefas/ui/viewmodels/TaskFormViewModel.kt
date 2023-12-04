@@ -54,7 +54,7 @@ class TaskFormViewModel(
                                 topAppBarTitle = "Editando tarefa",
                                 title = task.title,
                                 description = task.description ?: "",
-                                isDeleteEnable = true
+                                isDeleteEnabled = true
                             )
                         }
                     }

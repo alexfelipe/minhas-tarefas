@@ -1,14 +1,9 @@
 package br.com.alexf.minhastarefas.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -16,10 +11,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -27,10 +24,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskFormScreen(
     uiState: TaskFormUiState,
@@ -39,54 +36,41 @@ fun TaskFormScreen(
     onDeleteClick: () -> Unit,
 ) {
     Column(modifier) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xff68ddff)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        val topAppBarTitle = uiState.topAppBarTitle
+        val deleteEnabled = uiState.isDeleteEnabled
+        TopAppBar(
+            title = {
                 Text(
-                    text = uiState.topAppBarTitle,
-                    Modifier
-                        .weight(1f)
-                        .padding(8.dp),
-                    fontSize = 20.sp
+                    text = topAppBarTitle,
+                    fontSize = 20.sp,
                 )
-                Row(
-                    modifier
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (uiState.isDeleteEnable) {
-                        Icon(
-                            Icons.Filled.Delete,
-                            contentDescription = "Delete task icon",
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable {
-                                    onDeleteClick()
-                                }
-                                .padding(4.dp)
-                        )
-                    }
+            },
+            actions = {
+                if (deleteEnabled) {
                     Icon(
-                        Icons.Filled.Done,
-                        contentDescription = "Save task icon",
+                        Icons.Filled.Delete,
+                        contentDescription = "Delete task icon",
                         Modifier
                             .clip(CircleShape)
                             .clickable {
-                                onSaveClick()
+                                onDeleteClick()
                             }
                             .padding(4.dp)
                     )
                 }
-            }
-        }
+                Icon(
+                    Icons.Filled.Done,
+                    contentDescription = "Save task icon",
+                    Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            onSaveClick()
+                        }
+                        .padding(4.dp)
+                )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF03A9F4))
+        )
         Spacer(modifier = Modifier.size(8.dp))
         val title = uiState.title
         val description = uiState.description
@@ -135,6 +119,7 @@ fun TaskFormScreen(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun TaskFormScreenPreview() {
@@ -156,7 +141,7 @@ fun TaskFormScreenWithEditModePreview() {
         TaskFormScreen(
             uiState = TaskFormUiState(
                 topAppBarTitle = "Editando tarefa",
-                isDeleteEnable = true
+                isDeleteEnabled = true
             ),
             onSaveClick = {},
             onDeleteClick = {},
