@@ -24,4 +24,7 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: TaskEntity)
 
+    @Query("SELECT * FROM TaskEntity WHERE title LIKE :text OR description LIKE :text")
+    fun searchTasks(text: String): Flow<List<TaskEntity>>
+
 }

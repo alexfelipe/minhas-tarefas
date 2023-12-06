@@ -7,12 +7,16 @@ import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.repositories.TasksRepository
 import br.com.alexf.minhastarefas.repositories.toTask
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -25,6 +29,8 @@ class TaskFormViewModel(
         MutableStateFlow(TaskFormUiState())
     val uiState = _uiState.asStateFlow()
     private val id: String? = savedStateHandle["taskId"]
+    private var saveJob: Job = Job()
+    private var deleteJob: Job = Job()
 
     init {
         _uiState.update { currentState ->
@@ -63,6 +69,9 @@ class TaskFormViewModel(
     }
 
     suspend fun save() {
+        saveJob.cancel()
+        saveJob = currentCoroutineContext().job
+        delay(300L)
         with(_uiState.value) {
             repository.save(
                 Task(
@@ -76,6 +85,9 @@ class TaskFormViewModel(
     }
 
     suspend fun delete() {
+        deleteJob.cancel()
+        deleteJob = currentCoroutineContext().job
+        delay(300L)
         id?.let {
             repository.delete(id)
         }

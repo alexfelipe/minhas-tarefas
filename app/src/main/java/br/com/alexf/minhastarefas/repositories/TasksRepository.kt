@@ -4,6 +4,7 @@ import br.com.alexf.minhastarefas.database.dao.TaskDao
 import br.com.alexf.minhastarefas.database.entities.TaskEntity
 import br.com.alexf.minhastarefas.models.Task
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class TasksRepository(
@@ -29,6 +30,8 @@ class TasksRepository(
     }
 
     fun findById(id: String) = dao.findById(id)
+
+    fun searchTasks(text: String) = dao.searchTasks(text)
 
 }
 

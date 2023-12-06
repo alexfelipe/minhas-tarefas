@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.samples.generators.generateRandomTasks
+import br.com.alexf.minhastarefas.ui.navigation.tasksListRoute
 import br.com.alexf.minhastarefas.ui.states.TasksListUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 
@@ -61,69 +63,60 @@ fun TasksListScreen(
     onNewTaskClick: () -> Unit = {},
     onTaskClick: (Task) -> Unit = {},
 ) {
-    Column {
-            TopAppBar(
-                title = { },
-                actions = {
-                    var isSearchTextFieldEnabled by remember {
-                        mutableStateOf(false)
+    Column(modifier) {
+        TopAppBar(title = { /*TODO*/ }, actions = {
+            var isSearchTextFieldDisplayed by remember {
+                mutableStateOf(false)
+            }
+            AnimatedVisibility(visible = !isSearchTextFieldDisplayed) {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = "ícone de buscar",
+                    Modifier
+                        .padding(8.dp)
+                        .clickable {
+                        isSearchTextFieldDisplayed = true
                     }
-                    var text by remember {
-                        mutableStateOf("")
+                )
+            }
+            AnimatedVisibility(visible = isSearchTextFieldDisplayed) {
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = "ícone de fechar",
+                    Modifier
+                        .padding(8.dp)
+                        .clickable {
+                        isSearchTextFieldDisplayed = false
+                        uiState.onSearchTextChange("")
                     }
-                    AnimatedVisibility(visible = isSearchTextFieldEnabled) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = "ícone para fechar campo de texto de busca",
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable {
-                                    isSearchTextFieldEnabled = false
-                                    text = ""
-                                }
-                                .padding(8.dp),
-                        )
+                )
+            }
+            BasicTextField(
+                value = uiState.searchText,
+                onValueChange = uiState.onSearchTextChange,
+                Modifier.fillMaxWidth(
+                    animateFloatAsState(
+                        targetValue = if (isSearchTextFieldDisplayed) 1f else 0f,
+                        label = "largura animada do campo de texto"
+                    ).value
+                ),
+                textStyle = TextStyle.Default.copy(
+                    fontSize = 18.sp,
+                ),
+                decorationBox = { innerTextField ->
+                    if(uiState.searchText.isEmpty()){
+                        Text(text = "O que você busca?",
+                            style = TextStyle.Default.copy(
+                                fontSize = 18.sp,
+                                color = Color.Gray.copy(0.5f),
+                                fontStyle = FontStyle.Italic
+                            ))
                     }
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        }, modifier.fillMaxWidth(
-                            animateFloatAsState(
-                                targetValue = if (isSearchTextFieldEnabled) 1f else 0f,
-                                label = "basic text field width"
-                            ).value
-                        ),
-                        decorationBox = { innerTextField ->
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "O que você busca?",
-                                    style = TextStyle(
-                                        color = Color.Gray.copy(alpha = 0.5f),
-                                        fontStyle = FontStyle.Italic,
-                                        fontSize = 18.sp
-                                    )
-                                )
-                            }
-                            innerTextField()
-                        },
-                        textStyle = TextStyle.Default.copy(
-                            fontSize = 18.sp
-                        )
-                    )
-                    AnimatedVisibility(visible = !isSearchTextFieldEnabled) {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = "ícone de busca",
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable { isSearchTextFieldEnabled = true }
-                                .padding(8.dp),
-                        )
-                    }
-
-                })
-        Box(modifier) {
+                    innerTextField()
+                }
+            )
+        })
+        Box {
             ExtendedFloatingActionButton(
                 onClick = onNewTaskClick,
                 Modifier
@@ -139,8 +132,9 @@ fun TasksListScreen(
                     Text(text = "New Task")
                 }
             }
+            val tasks = uiState.foundTasks.ifEmpty { uiState.tasks }
             LazyColumn(Modifier.fillMaxSize()) {
-                items(uiState.tasks) { task ->
+                items(tasks) { task ->
                     var showDescription by remember {
                         mutableStateOf(false)
                     }
