@@ -20,3 +20,5 @@ jetpack-compose-minhas-tarefas
 📝 Outras informações
 
 O projeto foi dividido em várias branches que adiciona novas funcionalidades ao App.
+
+<a href="https://play.google.com/store/apps/details?id=br.com.alexf.minhastarefas"><img src="https://freeiconshop.com/wp-content/uploads/edd/google-play-badge.png"/></a>
