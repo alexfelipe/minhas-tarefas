@@ -61,6 +61,7 @@ class TasksListViewModel(
                     entities.map { it.toTask() }
                 }
                 .collectLatest { tasks ->
+                    Log.i("TasksListViewModel", "searchText: $tasks")
                     _uiState.update {
                         it.copy(foundTasks = tasks)
                     }

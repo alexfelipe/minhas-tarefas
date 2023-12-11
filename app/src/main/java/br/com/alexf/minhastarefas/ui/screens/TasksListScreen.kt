@@ -12,24 +12,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -41,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -51,23 +55,48 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.samples.generators.generateRandomTasks
-import br.com.alexf.minhastarefas.ui.navigation.tasksListRoute
 import br.com.alexf.minhastarefas.ui.states.TasksListUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun TasksListScreen(
     uiState: TasksListUiState,
+    isDarkModeEnabled: Boolean,
+    onDarkModeChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onNewTaskClick: () -> Unit = {},
     onTaskClick: (Task) -> Unit = {},
 ) {
     Column(modifier) {
-        TopAppBar(title = { /*TODO*/ }, actions = {
-            var isSearchTextFieldDisplayed by remember {
-                mutableStateOf(false)
+        var isSearchTextFieldDisplayed by remember {
+            mutableStateOf(false)
+        }
+        TopAppBar(title = {
+            AnimatedVisibility(visible = !isSearchTextFieldDisplayed) {
+                Switch(
+                    checked = isDarkModeEnabled,
+                    onCheckedChange = onDarkModeChange,
+                    thumbContent = {
+                        if (isDarkModeEnabled) {
+                            Icon(
+                                Icons.Filled.NightsStay,
+                                contentDescription = "Ícone de lua"
+                            )
+                        } else {
+                            Icon(
+                                Icons.Filled.WbSunny,
+                                contentDescription = "ícone de sol",
+                                tint = Color(0xFFFFEB3B)
+                            )
+                        }
+                    },
+                )
             }
+        }, actions = {
             AnimatedVisibility(visible = !isSearchTextFieldDisplayed) {
                 Icon(
                     Icons.Filled.Search,
@@ -75,8 +104,8 @@ fun TasksListScreen(
                     Modifier
                         .padding(8.dp)
                         .clickable {
-                        isSearchTextFieldDisplayed = true
-                    }
+                            isSearchTextFieldDisplayed = true
+                        }
                 )
             }
             AnimatedVisibility(visible = isSearchTextFieldDisplayed) {
@@ -86,9 +115,9 @@ fun TasksListScreen(
                     Modifier
                         .padding(8.dp)
                         .clickable {
-                        isSearchTextFieldDisplayed = false
-                        uiState.onSearchTextChange("")
-                    }
+                            isSearchTextFieldDisplayed = false
+                            uiState.onSearchTextChange("")
+                        }
                 )
             }
             BasicTextField(
@@ -100,20 +129,24 @@ fun TasksListScreen(
                         label = "largura animada do campo de texto"
                     ).value
                 ),
-                textStyle = TextStyle.Default.copy(
+                textStyle = LocalTextStyle.current.copy(
+                    color = LocalContentColor.current,
                     fontSize = 18.sp,
                 ),
                 decorationBox = { innerTextField ->
-                    if(uiState.searchText.isEmpty()){
-                        Text(text = "O que você busca?",
-                            style = TextStyle.Default.copy(
+                    if (uiState.searchText.isEmpty()) {
+                        Text(
+                            text = "O que você busca?",
+                            style = LocalTextStyle.current.copy(
                                 fontSize = 18.sp,
                                 color = Color.Gray.copy(0.5f),
                                 fontStyle = FontStyle.Italic
-                            ))
+                            )
+                        )
                     }
                     innerTextField()
-                }
+                },
+                cursorBrush = SolidColor(LocalContentColor.current)
             )
         })
         Box {
@@ -206,8 +239,10 @@ fun TasksListScreenPreview() {
     MinhasTarefasTheme {
         TasksListScreen(
             uiState = TasksListUiState(
-                tasks = generateRandomTasks(5)
-            )
+                tasks = generateRandomTasks(5),
+            ),
+            isDarkModeEnabled = false,
+            onDarkModeChange = {}
         )
     }
 }

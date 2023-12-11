@@ -1,5 +1,6 @@
 package br.com.alexf.minhastarefas.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import br.com.alexf.minhastarefas.repositories.TasksRepository
 import br.com.alexf.minhastarefas.repositories.toTask
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 
 class TaskFormViewModel(
@@ -29,8 +33,9 @@ class TaskFormViewModel(
         MutableStateFlow(TaskFormUiState())
     val uiState = _uiState.asStateFlow()
     private val id: String? = savedStateHandle["taskId"]
-    private var saveJob: Job = Job()
-    private var deleteJob: Job = Job()
+    private var currentTask: Task? = null
+    private var savingJob: Job = Job()
+    private var delitingJob: Job = Job()
 
     init {
         _uiState.update { currentState ->
@@ -55,6 +60,7 @@ class TaskFormViewModel(
                     .mapNotNull {
                         it.toTask()
                     }.collectLatest { task ->
+                        currentTask = task
                         _uiState.update { currentState ->
                             currentState.copy(
                                 topAppBarTitle = "Editando tarefa",
@@ -69,25 +75,26 @@ class TaskFormViewModel(
     }
 
     suspend fun save() {
-        saveJob.cancel()
-        saveJob = currentCoroutineContext().job
-        delay(300L)
+        savingJob.cancel()
+        savingJob = currentCoroutineContext().job
+        delay(1000)
         with(_uiState.value) {
             repository.save(
                 Task(
                     id = id ?: UUID.randomUUID().toString(),
                     title = title,
-                    description = description
+                    description = description,
+                    isDone = currentTask?.isDone ?: false
                 )
             )
         }
-
     }
 
+
     suspend fun delete() {
-        deleteJob.cancel()
-        deleteJob = currentCoroutineContext().job
-        delay(300L)
+        delitingJob.cancel()
+        delitingJob = currentCoroutineContext().job
+        delay(1000)
         id?.let {
             repository.delete(id)
         }

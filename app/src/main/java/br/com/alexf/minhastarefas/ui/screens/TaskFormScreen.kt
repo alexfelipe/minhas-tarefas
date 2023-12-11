@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -20,12 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
+import kotlinx.coroutines.sync.Mutex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,13 +74,18 @@ fun TaskFormScreen(
                         .padding(4.dp)
                 )
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF03A9F4))
         )
         Spacer(modifier = Modifier.size(8.dp))
         val title = uiState.title
         val description = uiState.description
-        val titleFontStyle = TextStyle.Default.copy(fontSize = 24.sp)
-        val descriptionFontStyle = TextStyle.Default.copy(fontSize = 18.sp)
+        val titleFontStyle = LocalTextStyle.current.copy(
+            fontSize = 24.sp,
+            color = LocalContentColor.current,
+        )
+        val descriptionFontStyle = LocalTextStyle.current.copy(
+            fontSize = 18.sp,
+            color = LocalContentColor.current
+        )
         BasicTextField(
             value = title,
             onValueChange = uiState.onTitleChange,
@@ -85,7 +95,7 @@ fun TaskFormScreen(
             decorationBox = { innerTextField ->
                 if (title.isEmpty()) {
                     Text(
-                        text = "Title",
+                        text = "Título",
                         style = titleFontStyle.copy(
                             color = Color.Gray.copy(alpha = 0.5f)
                         ),
@@ -93,7 +103,8 @@ fun TaskFormScreen(
                 }
                 innerTextField()
             },
-            textStyle = titleFontStyle
+            textStyle = titleFontStyle,
+            cursorBrush = SolidColor(LocalContentColor.current)
         )
         Spacer(modifier = Modifier.size(16.dp))
         BasicTextField(
@@ -105,7 +116,7 @@ fun TaskFormScreen(
             decorationBox = { innerTextField ->
                 if (description.isEmpty()) {
                     Text(
-                        text = "Description",
+                        text = "Descrição",
                         style = descriptionFontStyle
                             .copy(
                                 color = Color.Gray.copy(alpha = 0.5f)
@@ -114,7 +125,8 @@ fun TaskFormScreen(
                 }
                 innerTextField()
             },
-            textStyle = descriptionFontStyle
+            textStyle = descriptionFontStyle,
+            cursorBrush = SolidColor(LocalContentColor.current)
         )
     }
 }

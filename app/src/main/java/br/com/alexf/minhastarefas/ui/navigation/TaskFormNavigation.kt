@@ -11,11 +11,15 @@ import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.ui.screens.TaskFormScreen
 import br.com.alexf.minhastarefas.ui.viewmodels.TaskFormViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 const val taskFormRoute = "taskForm"
 const val taskIdArgument = "taskId"
+
+private val mutex = Mutex()
 
 fun NavGraphBuilder.taskFormScreen(
     onPopBackStack: () -> Unit,
@@ -32,8 +36,12 @@ fun NavGraphBuilder.taskFormScreen(
             uiState = uiState,
             onSaveClick = {
                 scope.launch {
-                    viewModel.save()
-                    onPopBackStack()
+                    if(!mutex.isLocked){
+                        mutex.withLock {
+                            viewModel.save()
+                            onPopBackStack()
+                        }
+                    }
                 }
             },
             onDeleteClick = {

@@ -14,7 +14,9 @@ const val tasksListRoute = "tasksList"
 
 fun NavGraphBuilder.tasksListScreen(
     onNavigateToNewTaskForm: () -> Unit,
-    onNavigateToEditTaskForm: (Task) -> Unit
+    onNavigateToEditTaskForm: (Task) -> Unit,
+    isDarkModeEnabled: Boolean,
+    onDarkModeChange: (Boolean) -> Unit,
 ) {
     composable(tasksListRoute) {
         val viewModel = koinViewModel<TasksListViewModel>()
@@ -23,7 +25,9 @@ fun NavGraphBuilder.tasksListScreen(
         TasksListScreen(
             uiState = uiState,
             onNewTaskClick = onNavigateToNewTaskForm,
-            onTaskClick = onNavigateToEditTaskForm
+            onTaskClick = onNavigateToEditTaskForm,
+            isDarkModeEnabled = isDarkModeEnabled,
+            onDarkModeChange = onDarkModeChange
         )
     }
 }
