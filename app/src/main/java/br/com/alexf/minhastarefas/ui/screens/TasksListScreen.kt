@@ -32,10 +32,12 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +73,9 @@ fun TasksListScreen(
     onNewTaskClick: () -> Unit = {},
     onTaskClick: (Task) -> Unit = {},
 ) {
+    CompositionLocalProvider {
+
+    }
     Column(modifier) {
         var isSearchTextFieldDisplayed by remember {
             mutableStateOf(false)

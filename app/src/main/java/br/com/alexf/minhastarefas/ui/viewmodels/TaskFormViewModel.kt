@@ -1,6 +1,5 @@
 package br.com.alexf.minhastarefas.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,9 +7,6 @@ import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.repositories.TasksRepository
 import br.com.alexf.minhastarefas.repositories.toTask
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,10 +14,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 
 class TaskFormViewModel(
@@ -34,8 +27,8 @@ class TaskFormViewModel(
     val uiState = _uiState.asStateFlow()
     private val id: String? = savedStateHandle["taskId"]
     private var currentTask: Task? = null
-    private var savingJob: Job = Job()
-    private var delitingJob: Job = Job()
+    private var isSaving = false
+    private var isDeleting = false
 
     init {
         _uiState.update { currentState ->
@@ -75,29 +68,66 @@ class TaskFormViewModel(
     }
 
     suspend fun save() {
-        savingJob.cancel()
-        savingJob = currentCoroutineContext().job
-        delay(1000)
-        with(_uiState.value) {
-            repository.save(
-                Task(
-                    id = id ?: UUID.randomUUID().toString(),
-                    title = title,
-                    description = description,
-                    isDone = currentTask?.isDone ?: false
+        if (isSaving) {
+            return
+        }
+        isSaving = true
+        _uiState.update {
+            it.copy(isProcessing = true)
+        }
+        try {
+            with(_uiState.value) {
+                repository.save(
+                    Task(
+                        id = id ?: UUID.randomUUID().toString(),
+                        title = title,
+                        description = description,
+                        isDone = currentTask?.isDone ?: false
+                    )
                 )
-            )
+            }
+            _uiState.update {
+                it.copy(
+                    isProcessing = false,
+                    isSavedOrDeleted = true
+                )
+            }
+        } catch (t: Throwable) {
+            isSaving = false
+            _uiState.update {
+                it.copy(isProcessing = false)
+            }
         }
     }
 
-
     suspend fun delete() {
-        delitingJob.cancel()
-        delitingJob = currentCoroutineContext().job
-        delay(1000)
-        id?.let {
-            repository.delete(id)
+        if (isDeleting) {
+            return
         }
+        isDeleting = true
+        _uiState.update {
+            it.copy(isProcessing = true)
+        }
+        try {
+            id?.let {
+                repository.delete(id)
+            }
+            _uiState.update {
+                it.copy(
+                    isProcessing = false,
+                    isSavedOrDeleted = true
+                )
+            }
+        } catch (t: Throwable) {
+            isDeleting = false
+            _uiState.update {
+                it.copy(
+                    isProcessing = false,
+                )
+            }
+        }
+
     }
 
 }
+

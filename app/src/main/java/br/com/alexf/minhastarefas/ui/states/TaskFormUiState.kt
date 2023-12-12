@@ -7,4 +7,6 @@ data class TaskFormUiState(
     val onTitleChange: (String) -> Unit = {},
     val onDescriptionChange: (String) -> Unit = {},
     val isDeleteEnabled: Boolean = false,
+    val isProcessing: Boolean = false,
+    val isSavedOrDeleted: Boolean = false
 )

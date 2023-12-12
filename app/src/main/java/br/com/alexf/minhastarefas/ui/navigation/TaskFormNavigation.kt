@@ -1,25 +1,23 @@
 package br.com.alexf.minhastarefas.ui.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.ui.screens.TaskFormScreen
 import br.com.alexf.minhastarefas.ui.viewmodels.TaskFormViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 const val taskFormRoute = "taskForm"
 const val taskIdArgument = "taskId"
-
-private val mutex = Mutex()
 
 fun NavGraphBuilder.taskFormScreen(
     onPopBackStack: () -> Unit,
@@ -32,29 +30,28 @@ fun NavGraphBuilder.taskFormScreen(
         val viewModel = koinViewModel<TaskFormViewModel>(
             parameters = { parametersOf(taskId) })
         val uiState by viewModel.uiState.collectAsState()
+        LaunchedEffect(uiState.isSavedOrDeleted) {
+            if (uiState.isSavedOrDeleted) {
+                onPopBackStack()
+            }
+        }
         TaskFormScreen(
             uiState = uiState,
             onSaveClick = {
                 scope.launch {
-                    if(!mutex.isLocked){
-                        mutex.withLock {
-                            viewModel.save()
-                            onPopBackStack()
-                        }
-                    }
+                    viewModel.save()
                 }
             },
             onDeleteClick = {
                 scope.launch {
                     viewModel.delete()
-                    onPopBackStack()
                 }
             })
     }
 }
 
-fun NavHostController.navigateToNewTaskForm() {
-    navigate(taskFormRoute)
+fun NavHostController.navigateToNewTaskForm(navOptions: NavOptions? = null) {
+    navigate(taskFormRoute, navOptions)
 }
 
 fun NavHostController.navigateToEditTaskForm(task: Task) {
