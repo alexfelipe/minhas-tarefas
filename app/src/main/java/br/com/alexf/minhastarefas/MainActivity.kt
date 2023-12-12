@@ -1,20 +1,12 @@
 package br.com.alexf.minhastarefas
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.CompositionLocal
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import br.com.alexf.minhastarefas.ui.navigation.navigateToEditTaskForm
@@ -22,8 +14,9 @@ import br.com.alexf.minhastarefas.ui.navigation.navigateToNewTaskForm
 import br.com.alexf.minhastarefas.ui.navigation.taskFormScreen
 import br.com.alexf.minhastarefas.ui.navigation.tasksListScreen
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
-import br.com.alexf.minhastarefas.ui.viewmodels.TasksListViewModel
+import br.com.alexf.minhastarefas.ui.viewmodels.AppViewModel
 import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
 class MainActivity : ComponentActivity() {
@@ -31,41 +24,31 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var isDarkModeEnabled by remember {
-                mutableStateOf(true)
-            }
-            val appViewModel: String = ""
-
-            LocalAbsoluteTonalElevation
-
-
-
+            val appViewModel = koinViewModel<AppViewModel>()
+            val isDarkModeEnabled by appViewModel.isDarkMode
+                .collectAsState(initial = false)
             MinhasTarefasTheme(darkTheme = isDarkModeEnabled) {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     KoinAndroidContext {
-                            NavHost(
-                                navController = navController,
-                                startDestination = "tasksList"
-                            ) {
-                                tasksListScreen(
-                                    onNavigateToNewTaskForm = {
-                                        navController.navigateToNewTaskForm()
-                                    },
-                                    onNavigateToEditTaskForm = { task ->
-                                        navController.navigateToEditTaskForm(task)
-                                    },
-                                    isDarkModeEnabled = isDarkModeEnabled,
-                                    onDarkModeChange = {
-                                        isDarkModeEnabled = it
-                                    }
-                                )
-                                taskFormScreen(
-                                    onPopBackStack = {
-                                        navController.navigateUp()
-                                    }
-                                )
-                            }
+                        NavHost(
+                            navController = navController,
+                            startDestination = "tasksList"
+                        ) {
+                            tasksListScreen(
+                                onNavigateToNewTaskForm = {
+                                    navController.navigateToNewTaskForm()
+                                },
+                                onNavigateToEditTaskForm = { task ->
+                                    navController.navigateToEditTaskForm(task)
+                                },
+                            )
+                            taskFormScreen(
+                                onPopBackStack = {
+                                    navController.navigateUp()
+                                }
+                            )
+                        }
 
                     }
                 }

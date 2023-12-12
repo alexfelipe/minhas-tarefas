@@ -1,9 +1,11 @@
 package br.com.alexf.minhastarefas.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.alexf.minhastarefas.models.Task
+import br.com.alexf.minhastarefas.repositories.AppRepository
 import br.com.alexf.minhastarefas.repositories.TasksRepository
 import br.com.alexf.minhastarefas.repositories.toTask
 import br.com.alexf.minhastarefas.ui.states.TaskFormUiState
@@ -19,7 +21,8 @@ import java.util.UUID
 
 class TaskFormViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: TasksRepository
+    private val repository: TasksRepository,
+    private val appRepository: AppRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<TaskFormUiState> =
