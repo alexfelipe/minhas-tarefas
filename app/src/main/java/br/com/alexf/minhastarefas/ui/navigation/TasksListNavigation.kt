@@ -3,6 +3,7 @@ package br.com.alexf.minhastarefas.ui.navigation
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import br.com.alexf.minhastarefas.models.Task
 import br.com.alexf.minhastarefas.ui.screens.TasksListScreen
@@ -26,4 +27,8 @@ fun NavGraphBuilder.tasksListScreen(
             onTaskClick = onNavigateToEditTaskForm
         )
     }
+}
+
+fun NavHostController.navigateToTasksList() {
+    navigate(tasksListRoute)
 }
