@@ -1,8 +1,13 @@
 package br.com.alexf.minhastarefas
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import br.com.alexf.minhastarefas.ui.navigation.authGraph
@@ -54,4 +59,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+}
+
+@SuppressLint("ComposableNaming")
+@Composable
+private fun debugBackStack(navController: NavHostController) {
+    LaunchedEffect(Unit) {
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            val routes = navController.currentBackStack.value.map {
+                it.destination.route
+            }
+            Log.i("MainActivity", "onCreate: back stack - $routes")
+        }
+    }
 }
