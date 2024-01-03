@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -60,58 +61,60 @@ fun TasksListScreen(
     modifier: Modifier = Modifier,
     onNewTaskClick: () -> Unit = {},
     onTaskClick: (Task) -> Unit = {},
+    onExitAppClick: () -> Unit = {}
 ) {
     Column {
-            TopAppBar(
-                title = { },
-                actions = {
-                    var isSearchTextFieldEnabled by remember {
-                        mutableStateOf(false)
-                    }
-                    var text by remember {
-                        mutableStateOf("")
-                    }
-                    AnimatedVisibility(visible = isSearchTextFieldEnabled) {
-                        Icon(
-                            Icons.Filled.Close,
-                            contentDescription = "ícone para fechar campo de texto de busca",
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable {
-                                    isSearchTextFieldEnabled = false
-                                    text = ""
-                                }
-                                .padding(8.dp),
-                        )
-                    }
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        }, modifier.fillMaxWidth(
-                            animateFloatAsState(
-                                targetValue = if (isSearchTextFieldEnabled) 1f else 0f,
-                                label = "basic text field width"
-                            ).value
-                        ),
-                        decorationBox = { innerTextField ->
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "O que você busca?",
-                                    style = TextStyle(
-                                        color = Color.Gray.copy(alpha = 0.5f),
-                                        fontStyle = FontStyle.Italic,
-                                        fontSize = 18.sp
-                                    )
-                                )
+        TopAppBar(
+            title = { },
+            actions = {
+                var isSearchTextFieldEnabled by remember {
+                    mutableStateOf(false)
+                }
+                var text by remember {
+                    mutableStateOf("")
+                }
+                AnimatedVisibility(visible = isSearchTextFieldEnabled) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "ícone para fechar campo de texto de busca",
+                        Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                isSearchTextFieldEnabled = false
+                                text = ""
                             }
-                            innerTextField()
-                        },
-                        textStyle = TextStyle.Default.copy(
-                            fontSize = 18.sp
-                        )
+                            .padding(8.dp),
                     )
-                    AnimatedVisibility(visible = !isSearchTextFieldEnabled) {
+                }
+                BasicTextField(
+                    value = text,
+                    onValueChange = {
+                        text = it
+                    }, modifier.fillMaxWidth(
+                        animateFloatAsState(
+                            targetValue = if (isSearchTextFieldEnabled) 1f else 0f,
+                            label = "basic text field width"
+                        ).value
+                    ),
+                    decorationBox = { innerTextField ->
+                        if (text.isEmpty()) {
+                            Text(
+                                text = "O que você busca?",
+                                style = TextStyle(
+                                    color = Color.Gray.copy(alpha = 0.5f),
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 18.sp
+                                )
+                            )
+                        }
+                        innerTextField()
+                    },
+                    textStyle = TextStyle.Default.copy(
+                        fontSize = 18.sp
+                    )
+                )
+                AnimatedVisibility(visible = !isSearchTextFieldEnabled) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(
                             Icons.Filled.Search,
                             contentDescription = "ícone de busca",
@@ -120,9 +123,20 @@ fun TasksListScreen(
                                 .clickable { isSearchTextFieldEnabled = true }
                                 .padding(8.dp),
                         )
+                        Icon(
+                            Icons.Filled.ExitToApp,
+                            contentDescription = "ícone sair do App",
+                            Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    onExitAppClick()
+                                }
+                                .padding(8.dp),
+                        )
                     }
+                }
 
-                })
+            })
         Box(modifier) {
             ExtendedFloatingActionButton(
                 onClick = onNewTaskClick,

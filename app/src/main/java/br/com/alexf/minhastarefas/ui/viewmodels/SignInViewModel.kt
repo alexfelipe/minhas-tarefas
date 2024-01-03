@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class SignInViewModel(
-    private val repository: UsersRepository
+    private val repository: UsersRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
@@ -33,14 +33,7 @@ class SignInViewModel(
 
     fun authenticate() {
         with(_uiState.value) {
-            _uiState.update {
-                it.copy(
-                    isAuthenticated = repository.authenticate(
-                        user,
-                        password
-                    )
-                )
-            }
+            repository.authenticate(user, password)
         }
     }
 

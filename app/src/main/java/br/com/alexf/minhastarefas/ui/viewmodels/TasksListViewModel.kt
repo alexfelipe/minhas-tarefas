@@ -3,6 +3,7 @@ package br.com.alexf.minhastarefas.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.alexf.minhastarefas.repositories.TasksRepository
+import br.com.alexf.minhastarefas.repositories.UsersRepository
 import br.com.alexf.minhastarefas.repositories.toTask
 import br.com.alexf.minhastarefas.ui.states.TasksListUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,17 +12,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TasksListViewModel(
-    private val repository: TasksRepository
+    private val repository: TasksRepository,
+    private val usersRepository: UsersRepository
 ) : ViewModel() {
-
     private val _uiState: MutableStateFlow<TasksListUiState> =
         MutableStateFlow(TasksListUiState())
+
     val uiState
         get() = _uiState
             .combine(repository.tasks) { uiState, tasks ->
                 uiState.copy(tasks = tasks.map { it.toTask() })
             }
-
     init {
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -32,6 +33,10 @@ class TasksListViewModel(
                 })
             }
         }
+    }
+
+    fun logout() {
+        usersRepository.logout()
     }
 
 }
