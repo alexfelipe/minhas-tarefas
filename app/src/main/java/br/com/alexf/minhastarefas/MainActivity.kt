@@ -14,41 +14,37 @@ import br.com.alexf.minhastarefas.ui.navigation.navigateToNewTaskForm
 import br.com.alexf.minhastarefas.ui.navigation.navigateToSignIn
 import br.com.alexf.minhastarefas.ui.navigation.navigateToSignUp
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
-import org.koin.androidx.compose.KoinAndroidContext
-import org.koin.core.annotation.KoinExperimentalAPI
 
 class MainActivity : ComponentActivity() {
-    @OptIn(KoinExperimentalAPI::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MinhasTarefasTheme {
                 val navController = rememberNavController()
-                KoinAndroidContext {
-                    NavHost(
-                        navController = navController,
-                        startDestination = authGraphRoute
-                    ) {
-                        authGraph(
-                            onNavigateToHomeGraph = {
-                                navController.navigateToHomeGraph(it)
-                            }, onNavigateToSignIn = {
-                                navController.navigateToSignIn(it)
-                            },
-                            onNavigateToSignUp = {
-                                navController.navigateToSignUp()
-                            }
-                        )
-                        homeGraph(
-                            onNavigateToNewTaskForm = {
-                                navController.navigateToNewTaskForm()
-                            }, onNavigateToEditTaskForm = { task ->
-                                navController.navigateToEditTaskForm(task)
-                            }, onPopBackStack = {
-                                navController.popBackStack()
-                            }
-                        )
-                    }
+                NavHost(
+                    navController = navController,
+                    startDestination = authGraphRoute
+                ) {
+                    authGraph(
+                        onNavigateToHomeGraph = {
+                            navController.navigateToHomeGraph(it)
+                        }, onNavigateToSignIn = {
+                            navController.navigateToSignIn(it)
+                        },
+                        onNavigateToSignUp = {
+                            navController.navigateToSignUp()
+                        }
+                    )
+                    homeGraph(
+                        onNavigateToNewTaskForm = {
+                            navController.navigateToNewTaskForm()
+                        }, onNavigateToEditTaskForm = { task ->
+                            navController.navigateToEditTaskForm(task)
+                        }, onPopBackStack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }
