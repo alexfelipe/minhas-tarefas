@@ -28,16 +28,16 @@ class MainActivity : ComponentActivity() {
         val auth = Firebase.auth
         Log.i(TAG, "onCreate usuario atual: ${auth.currentUser}")
 
-//        auth.createUserWithEmailAndPassword(
-//            "alexfelipe@gmail.com",
-//            "alex123"
-//        ).addOnCompleteListener { task ->
-//            if(task.isSuccessful) {
-//                Log.i(TAG, "create user: sucesso")
-//            } else {
-//                Log.i(TAG, "create user: falha -> ${task.exception}")
-//            }
-//        }
+        auth.createUserWithEmailAndPassword(
+            "alexfelipe@gmail.com",
+            "alex123"
+        ).addOnCompleteListener { task ->
+            if(task.isSuccessful) {
+                Log.i(TAG, "create user: sucesso")
+            } else {
+                Log.i(TAG, "create user: falha -> ${task.exception}")
+            }
+        }
 
 //        auth.signInWithEmailAndPassword(
 //            "alexfelipe@gmail.com",
