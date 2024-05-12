@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.alexf.minhastarefas.ui.navigation.authGraph
 import br.com.alexf.minhastarefas.ui.navigation.authGraphRoute
 import br.com.alexf.minhastarefas.ui.navigation.homeGraph
+import br.com.alexf.minhastarefas.ui.navigation.navigateToAuthGraph
 import br.com.alexf.minhastarefas.ui.navigation.navigateToEditTaskForm
 import br.com.alexf.minhastarefas.ui.navigation.navigateToHomeGraph
 import br.com.alexf.minhastarefas.ui.navigation.navigateToNewTaskForm
@@ -24,28 +25,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val auth = Firebase.auth
-        Log.i(TAG, "onCreate usuario atual: ${auth.currentUser}")
-
-        auth.createUserWithEmailAndPassword(
-            "alexfelipe@gmail.com",
-            "alex123"
-        ).addOnCompleteListener { task ->
-            if(task.isSuccessful) {
-                Log.i(TAG, "create user: sucesso")
-            } else {
-                Log.i(TAG, "create user: falha -> ${task.exception}")
-            }
-        }
-
-//        auth.signInWithEmailAndPassword(
-//            "alexfelipe@gmail.com",
-//            "alex123"
-//        )
-
-//        auth.signOut()
-
         setContent {
             MinhasTarefasTheme {
                 val navController = rememberNavController()
@@ -70,6 +49,9 @@ class MainActivity : ComponentActivity() {
                             navController.navigateToEditTaskForm(task)
                         }, onPopBackStack = {
                             navController.popBackStack()
+                        },
+                        onNavigateToLogin = {
+                            navController.navigateToAuthGraph()
                         }
                     )
                 }

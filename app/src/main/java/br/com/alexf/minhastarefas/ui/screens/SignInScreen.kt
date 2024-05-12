@@ -1,8 +1,10 @@
 package br.com.alexf.minhastarefas.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,105 +49,141 @@ fun SignInScreen(
     Column(
         modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            Icons.Filled.Done,
-            contentDescription = "Ícone minhas tarefas",
-            Modifier
-                .clip(CircleShape)
-                .size(124.dp)
-                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                .padding(8.dp),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(text = "Minhas tarefas", style = Typography.titleLarge)
-        Spacer(modifier = Modifier.size(16.dp))
-        val textFieldModifier = Modifier
-            .fillMaxWidth(0.8f)
-            .padding(8.dp)
-        OutlinedTextField(
-            value = uiState.user,
-            onValueChange = uiState.onUserChange,
-            textFieldModifier,
-            shape = RoundedCornerShape(25),
-            leadingIcon = {
-                Icon(
-                    Icons.Filled.Person,
-                    contentDescription = "ícone de usuário"
+        val isError = uiState.error != null
+        AnimatedVisibility(visible = isError) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.error)
+            ) {
+                val error = uiState.error ?: ""
+                Text(
+                    text = error,
+                    Modifier
+                        .padding(16.dp),
+                    color = MaterialTheme.colorScheme.onError
                 )
-            },
-            label = {
-                Text(text = "Usuário")
             }
-        )
-        OutlinedTextField(
-            value = uiState.password,
-            onValueChange = uiState.onPasswordChange,
-            textFieldModifier,
-            shape = RoundedCornerShape(25),
-            leadingIcon = {
-                Icon(
-                    Icons.Filled.Password,
-                    contentDescription = "ícone de usuário"
-                )
-            },
-            label = {
-                Text("Senha")
-            },
-            trailingIcon = {
-                val trailingIconModifier = Modifier.clickable {
-                    uiState.onTogglePasswordVisibility()
+        }
+        Column(
+            Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                Icons.Filled.Done,
+                contentDescription = "Ícone minhas tarefas",
+                Modifier
+                    .clip(CircleShape)
+                    .size(124.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .padding(8.dp),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.size(16.dp))
+            Text(text = "Minhas tarefas", style = Typography.titleLarge)
+            Spacer(modifier = Modifier.size(16.dp))
+            val textFieldModifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(8.dp)
+            OutlinedTextField(
+                value = uiState.email,
+                onValueChange = uiState.onEmailChange,
+                textFieldModifier,
+                shape = RoundedCornerShape(25),
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Person,
+                        contentDescription = "ícone de usuário"
+                    )
+                },
+                label = {
+                    Text(text = "Email")
                 }
-                when (uiState.isShowPassword) {
-                    true -> {
-                        Icon(
-                            Icons.Filled.Visibility,
-                            contentDescription = "ícone de visível",
+            )
+            OutlinedTextField(
+                value = uiState.password,
+                onValueChange = uiState.onPasswordChange,
+                textFieldModifier,
+                shape = RoundedCornerShape(25),
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Password,
+                        contentDescription = "ícone de usuário"
+                    )
+                },
+                label = {
+                    Text("Senha")
+                },
+                trailingIcon = {
+                    val trailingIconModifier = Modifier.clickable {
+                        uiState.onTogglePasswordVisibility()
+                    }
+                    when (uiState.isShowPassword) {
+                        true -> {
+                            Icon(
+                                Icons.Filled.Visibility,
+                                contentDescription = "ícone de visível",
+                                trailingIconModifier
+                            )
+                        }
+
+                        else -> Icon(
+                            Icons.Filled.VisibilityOff,
+                            contentDescription = "ícone de não visível",
                             trailingIconModifier
                         )
                     }
-
-                    else -> Icon(
-                        Icons.Filled.VisibilityOff,
-                        contentDescription = "ícone de não visível",
-                        trailingIconModifier
-                    )
+                },
+                visualTransformation = when (uiState.isShowPassword) {
+                    false -> PasswordVisualTransformation()
+                    true -> VisualTransformation.None
                 }
-            },
-            visualTransformation = when (uiState.isShowPassword) {
-                false -> PasswordVisualTransformation()
-                true -> VisualTransformation.None
+            )
+            Button(
+                onClick = onSignInClick,
+                Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(8.dp)
+            ) {
+                Text(text = "Entrar")
             }
-        )
-        Button(
-            onClick = onSignInClick,
-            Modifier
-                .fillMaxWidth(0.8f)
-                .padding(8.dp)
-        ) {
-            Text(text = "Entrar")
-        }
-        TextButton(
-            onClick = onSignUpClick,
-            Modifier
-                .fillMaxWidth(0.8f)
-                .padding(8.dp)
-        ) {
-            Text(text = "Cadastrar")
+            TextButton(
+                onClick = onSignUpClick,
+                Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(8.dp)
+            ) {
+                Text(text = "Cadastrar")
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Default")
 @Composable
 fun SignInScreenPreview() {
     MinhasTarefasTheme {
         SignInScreen(
             uiState = SignInUiState(),
+            onSignInClick = {},
+            onSignUpClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "with error")
+@Composable
+fun SignInScreen1Preview() {
+    MinhasTarefasTheme {
+        SignInScreen(
+            uiState = SignInUiState(
+                error = "Erro ao fazer login"
+            ),
             onSignInClick = {},
             onSignUpClick = {}
         )

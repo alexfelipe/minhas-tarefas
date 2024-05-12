@@ -22,9 +22,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -60,6 +63,7 @@ fun TasksListScreen(
     modifier: Modifier = Modifier,
     onNewTaskClick: () -> Unit = {},
     onTaskClick: (Task) -> Unit = {},
+    onExitToAppClick: () -> Unit = {}
 ) {
     Column {
             TopAppBar(
@@ -112,14 +116,24 @@ fun TasksListScreen(
                         )
                     )
                     AnimatedVisibility(visible = !isSearchTextFieldEnabled) {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = "ícone de busca",
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable { isSearchTextFieldEnabled = true }
-                                .padding(8.dp),
-                        )
+                        Row {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = "ícone de busca",
+                                Modifier
+                                    .clip(CircleShape)
+                                    .clickable { isSearchTextFieldEnabled = true }
+                                    .padding(8.dp),
+                            )
+                            Icon(
+                                Icons.AutoMirrored.Filled.ExitToApp,
+                                contentDescription = "ícone sair do app",
+                                Modifier
+                                    .clip(CircleShape)
+                                    .clickable { onExitToAppClick() }
+                                    .padding(8.dp),
+                            )
+                        }
                     }
 
                 })

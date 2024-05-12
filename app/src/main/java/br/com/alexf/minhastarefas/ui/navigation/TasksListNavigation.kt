@@ -15,7 +15,8 @@ const val tasksListRoute = "tasksList"
 
 fun NavGraphBuilder.tasksListScreen(
     onNavigateToNewTaskForm: () -> Unit,
-    onNavigateToEditTaskForm: (Task) -> Unit
+    onNavigateToEditTaskForm: (Task) -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     composable(tasksListRoute) {
         val viewModel = koinViewModel<TasksListViewModel>()
@@ -24,7 +25,11 @@ fun NavGraphBuilder.tasksListScreen(
         TasksListScreen(
             uiState = uiState,
             onNewTaskClick = onNavigateToNewTaskForm,
-            onTaskClick = onNavigateToEditTaskForm
+            onTaskClick = onNavigateToEditTaskForm,
+            onExitToAppClick = {
+                viewModel.signOut()
+                onNavigateToLogin()
+            }
         )
     }
 }

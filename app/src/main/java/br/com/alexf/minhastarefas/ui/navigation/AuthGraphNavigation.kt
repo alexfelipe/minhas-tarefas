@@ -35,6 +35,12 @@ fun NavGraphBuilder.authGraph(
     }
 }
 
-fun NavHostController.navigateToAuthGraph(){
-    navigate(authGraphRoute)
+fun NavHostController.navigateToAuthGraph(
+    navOptions: NavOptions? = navOptions {
+        popUpTo(graph.startDestinationId) {
+            inclusive = true
+        }
+    }
+) {
+    navigate(authGraphRoute, navOptions)
 }
