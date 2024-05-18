@@ -33,6 +33,11 @@ class SignInViewModel(
                     _uiState.update {
                         it.copy(password = password)
                     }
+                },
+                onTogglePasswordVisibility = {
+                    _uiState.update {
+                        it.copy(isShowPassword = !_uiState.value.isShowPassword)
+                    }
                 }
             )
         }

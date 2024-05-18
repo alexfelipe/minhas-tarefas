@@ -49,6 +49,7 @@ fun SignInScreen(
     Column(
         modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         val isError = uiState.error != null
         AnimatedVisibility(visible = isError) {
@@ -120,9 +121,11 @@ fun SignInScreen(
                     Text("Senha")
                 },
                 trailingIcon = {
-                    val trailingIconModifier = Modifier.clickable {
-                        uiState.onTogglePasswordVisibility()
-                    }
+                    val trailingIconModifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            uiState.onTogglePasswordVisibility()
+                        }
                     when (uiState.isShowPassword) {
                         true -> {
                             Icon(
