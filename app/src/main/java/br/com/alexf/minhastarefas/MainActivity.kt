@@ -1,7 +1,6 @@
 package br.com.alexf.minhastarefas
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
@@ -16,10 +15,6 @@ import br.com.alexf.minhastarefas.ui.navigation.navigateToNewTaskForm
 import br.com.alexf.minhastarefas.ui.navigation.navigateToSignIn
 import br.com.alexf.minhastarefas.ui.navigation.navigateToSignUp
 import br.com.alexf.minhastarefas.ui.theme.MinhasTarefasTheme
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-
-private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
 

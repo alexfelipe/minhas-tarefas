@@ -18,7 +18,7 @@ import java.util.UUID
 
 class TaskFormViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: TasksRepository
+    private val repository: TasksRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<TaskFormUiState> =

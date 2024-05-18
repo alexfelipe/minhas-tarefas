@@ -67,7 +67,7 @@ fun TasksListScreen(
 ) {
     Column {
             TopAppBar(
-                title = { },
+                title = { Text(text = "${uiState.user}") },
                 actions = {
                     var isSearchTextFieldEnabled by remember {
                         mutableStateOf(false)

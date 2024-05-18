@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.alexf.minhastarefas.ui.states.SignUpUiState
@@ -31,11 +32,18 @@ fun SignUpScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.fillMaxSize()) {
+    Column(
+        modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         AnimatedVisibility(visible = uiState.error != null) {
             uiState.error?.let {
-                Box(modifier = Modifier.fillMaxWidth()
-                    .background(Color.Red)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Red)
+                ) {
                     Text(
                         text = it,
                         Modifier
@@ -59,8 +67,7 @@ fun SignUpScreen(
                 .fillMaxWidth(0.8f)
                 .weight(1f)
                 .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-                .verticalScroll(rememberScrollState()),
+                .align(Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -80,7 +87,8 @@ fun SignUpScreen(
                 shape = RoundedCornerShape(25),
                 label = {
                     Text(text = "Senha")
-                }
+                },
+                visualTransformation = PasswordVisualTransformation()
             )
             OutlinedTextField(
                 value = uiState.confirmPassword,
@@ -89,7 +97,8 @@ fun SignUpScreen(
                 shape = RoundedCornerShape(25),
                 label = {
                     Text(text = "Confirmar senha")
-                }
+                },
+                visualTransformation = PasswordVisualTransformation()
             )
             Button(
                 onClick = onSignUpClick,
