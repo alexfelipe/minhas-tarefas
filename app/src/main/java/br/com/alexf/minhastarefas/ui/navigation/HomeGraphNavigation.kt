@@ -12,7 +12,6 @@ fun NavGraphBuilder.homeGraph(
     onNavigateToNewTaskForm: () -> Unit,
     onNavigateToEditTaskForm: (Task) -> Unit,
     onPopBackStack: () -> Unit,
-    onNavigateToLogin: () -> Unit
 ) {
     navigation(
         startDestination = tasksListRoute,
@@ -21,7 +20,6 @@ fun NavGraphBuilder.homeGraph(
         tasksListScreen(
             onNavigateToNewTaskForm = onNavigateToNewTaskForm,
             onNavigateToEditTaskForm = onNavigateToEditTaskForm,
-            onNavigateToLogin = onNavigateToLogin
         )
         taskFormScreen(onPopBackStack = onPopBackStack)
     }

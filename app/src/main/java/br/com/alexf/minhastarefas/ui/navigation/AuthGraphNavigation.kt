@@ -10,7 +10,6 @@ const val authGraphRoute = "authGraph"
 
 fun NavGraphBuilder.authGraph(
     onNavigateToSignUp: () -> Unit,
-    onNavigateToHomeGraph: (NavOptions) -> Unit,
     onNavigateToSignIn: (NavOptions) -> Unit
 ) {
     navigation(
@@ -19,11 +18,6 @@ fun NavGraphBuilder.authGraph(
     ) {
         signInScreen(
             onNavigateToSignUp = onNavigateToSignUp,
-            onNavigateToTasksList = {
-                onNavigateToHomeGraph(navOptions {
-                    popUpTo(authGraphRoute)
-                })
-            }
         )
         signUpScreen(
             onNavigationToSignIn = {

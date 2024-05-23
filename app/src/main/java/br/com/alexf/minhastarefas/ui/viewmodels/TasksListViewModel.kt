@@ -22,8 +22,8 @@ class TasksListViewModel(
         get() = _uiState
             .combine(repository.tasks) { uiState, tasks ->
                 uiState.copy(tasks = tasks.map { it.toTask() })
-            }.combine(firebaseAuthRepository.currentUser) { uiState, user ->
-                uiState.copy(user = user?.email)
+            }.combine(firebaseAuthRepository.currentUser) { uiState, authResult ->
+                uiState.copy(user = authResult.currentUser?.email)
             }
 
     init {

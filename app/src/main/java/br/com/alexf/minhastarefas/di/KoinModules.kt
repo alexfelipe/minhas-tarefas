@@ -5,6 +5,7 @@ import br.com.alexf.minhastarefas.authentication.FirebaseAuthRepository
 import br.com.alexf.minhastarefas.database.MinhasTarefasDatabase
 import br.com.alexf.minhastarefas.repositories.TasksRepository
 import br.com.alexf.minhastarefas.repositories.UsersRepository
+import br.com.alexf.minhastarefas.ui.viewmodels.AppViewModel
 import br.com.alexf.minhastarefas.ui.viewmodels.SignInViewModel
 import br.com.alexf.minhastarefas.ui.viewmodels.SignUpViewModel
 import br.com.alexf.minhastarefas.ui.viewmodels.TaskFormViewModel
@@ -22,6 +23,7 @@ val appModule = module {
     viewModelOf(::TasksListViewModel)
     viewModelOf(::SignInViewModel)
     viewModelOf(::SignUpViewModel)
+    viewModelOf(::AppViewModel)
 }
 
 val storageModule = module {

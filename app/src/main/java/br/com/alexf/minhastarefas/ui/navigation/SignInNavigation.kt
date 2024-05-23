@@ -16,20 +16,12 @@ import org.koin.androidx.compose.koinViewModel
 const val signInRoute: String = "signIn"
 
 fun NavGraphBuilder.signInScreen(
-    onNavigateToTasksList: () -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
     composable(signInRoute) {
         val viewModel = koinViewModel<SignInViewModel>()
         val uiState by viewModel.uiState.collectAsState()
         val scope = rememberCoroutineScope()
-        val isAuthenticated by viewModel.isAuthenticated
-            .collectAsState(initial = false)
-        LaunchedEffect(isAuthenticated) {
-            if (isAuthenticated) {
-                onNavigateToTasksList()
-            }
-        }
         SignInScreen(
             uiState = uiState,
             onSignInClick = {
