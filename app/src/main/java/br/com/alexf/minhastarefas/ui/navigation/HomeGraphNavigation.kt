@@ -3,6 +3,7 @@ package br.com.alexf.minhastarefas.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import br.com.alexf.minhastarefas.models.Task
 
@@ -26,7 +27,11 @@ fun NavGraphBuilder.homeGraph(
 }
 
 fun NavHostController.navigateToHomeGraph(
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = navOptions {
+        popUpTo(graph.id) {
+            inclusive = true
+        }
+    }
 ) {
     navigate(homeGraphRoute, navOptions)
 }

@@ -31,7 +31,7 @@ fun NavGraphBuilder.authGraph(
 
 fun NavHostController.navigateToAuthGraph(
     navOptions: NavOptions? = navOptions {
-        popUpTo(graph.startDestinationId) {
+        popUpTo(graph.id) {
             inclusive = true
         }
     }
