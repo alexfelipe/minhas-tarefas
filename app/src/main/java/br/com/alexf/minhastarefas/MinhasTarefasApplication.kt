@@ -1,6 +1,7 @@
 package br.com.alexf.minhastarefas
 
 import android.app.Application
+import br.com.alexf.minhastarefas.di.androidModule
 import br.com.alexf.minhastarefas.di.appModule
 import br.com.alexf.minhastarefas.di.firebaseModule
 import br.com.alexf.minhastarefas.di.storageModule
@@ -19,7 +20,8 @@ class MinhasTarefasApplication : Application() {
             modules(
                 appModule,
                 storageModule,
-                firebaseModule
+                firebaseModule,
+                androidModule
             )
         }
     }
