@@ -3,6 +3,7 @@ package br.com.alexf.minhastarefas.ui.screens
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -154,7 +155,7 @@ fun TasksListScreen(
                 }
             }
             LazyColumn(Modifier.fillMaxSize()) {
-                items(uiState.tasks) { task ->
+                items(uiState.tasks, key = { it.id }) { task ->
                     var showDescription by remember {
                         mutableStateOf(false)
                     }
@@ -165,7 +166,9 @@ fun TasksListScreen(
                                 showDescription = !showDescription
                             }, onLongClick = {
                                 onTaskClick(task)
-                            })
+                            }).animateItemPlacement(
+                                spring(0.7f)
+                            )
                     ) {
                         Box(
                             Modifier
