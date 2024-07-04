@@ -24,7 +24,7 @@ class TaskFormViewModel(
     private val _uiState: MutableStateFlow<TaskFormUiState> =
         MutableStateFlow(TaskFormUiState())
     val uiState = _uiState.asStateFlow()
-    private val id: String? = savedStateHandle["taskId"]
+    private val id: String? = savedStateHandle["id"]
 
     init {
         _uiState.update { currentState ->

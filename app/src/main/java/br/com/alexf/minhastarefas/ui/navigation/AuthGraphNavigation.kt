@@ -5,16 +5,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
+import kotlinx.serialization.Serializable
 
-const val authGraphRoute = "authGraph"
+@Serializable
+object AuthGraph
 
 fun NavGraphBuilder.authGraph(
     onNavigateToSignUp: () -> Unit,
     onNavigateToSignIn: (NavOptions) -> Unit
 ) {
-    navigation(
-        route = authGraphRoute,
-        startDestination = signInRoute
+    navigation<AuthGraph>(
+        startDestination = SignInRoute
     ) {
         signInScreen(
             onNavigateToSignUp = onNavigateToSignUp,
@@ -22,7 +23,7 @@ fun NavGraphBuilder.authGraph(
         signUpScreen(
             onNavigationToSignIn = {
                 onNavigateToSignIn(navOptions {
-                    popUpTo(authGraphRoute)
+                    popUpTo(AuthGraph)
                 })
             }
         )
@@ -36,5 +37,5 @@ fun NavHostController.navigateToAuthGraph(
         }
     }
 ) {
-    navigate(authGraphRoute, navOptions)
+    navigate(AuthGraph, navOptions)
 }

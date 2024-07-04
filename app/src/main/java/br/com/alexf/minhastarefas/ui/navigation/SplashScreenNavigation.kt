@@ -9,11 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
 
-const val splashScreenRoute = "splashscreen"
+@Serializable
+object SplashScreenRoute
 
 fun NavGraphBuilder.splashScreen() {
-    composable(splashScreenRoute) {
+    composable<SplashScreenRoute> {
         Box(
             modifier = Modifier
                 .fillMaxSize()
