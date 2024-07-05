@@ -6,17 +6,18 @@ import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import br.com.alexf.minhastarefas.models.Task
+import kotlinx.serialization.Serializable
 
-const val homeGraphRoute = "homeGraph"
+@Serializable
+object HomeGraph
 
 fun NavGraphBuilder.homeGraph(
     onNavigateToNewTaskForm: () -> Unit,
     onNavigateToEditTaskForm: (Task) -> Unit,
     onPopBackStack: () -> Unit,
 ) {
-    navigation(
-        startDestination = tasksListRoute,
-        route = homeGraphRoute
+    navigation<HomeGraph>(
+        startDestination = TasksListRoute,
     ) {
         tasksListScreen(
             onNavigateToNewTaskForm = onNavigateToNewTaskForm,
@@ -24,14 +25,4 @@ fun NavGraphBuilder.homeGraph(
         )
         taskFormScreen(onPopBackStack = onPopBackStack)
     }
-}
-
-fun NavHostController.navigateToHomeGraph(
-    navOptions: NavOptions? = navOptions {
-        popUpTo(graph.id) {
-            inclusive = true
-        }
-    }
-) {
-    navigate(homeGraphRoute, navOptions)
 }

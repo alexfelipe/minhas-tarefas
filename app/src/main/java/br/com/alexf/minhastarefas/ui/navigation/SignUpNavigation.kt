@@ -10,14 +10,16 @@ import androidx.navigation.compose.composable
 import br.com.alexf.minhastarefas.ui.screens.SignUpScreen
 import br.com.alexf.minhastarefas.ui.viewmodels.SignUpViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-const val signUpRoute = "signUp"
+@Serializable
+object SignUpRoute
 
 fun NavGraphBuilder.signUpScreen(
     onNavigationToSignIn: () -> Unit
 ){
-    composable(signUpRoute){
+    composable<SignUpRoute>{
         val viewModel = koinViewModel<SignUpViewModel>()
         val uiState by viewModel.uiState.collectAsState()
         val scope = rememberCoroutineScope()
@@ -36,8 +38,4 @@ fun NavGraphBuilder.signUpScreen(
             }
         )
     }
-}
-
-fun NavHostController.navigateToSignUp() {
-    navigate(signUpRoute)
 }
