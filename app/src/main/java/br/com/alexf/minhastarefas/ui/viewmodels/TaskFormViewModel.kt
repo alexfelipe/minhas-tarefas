@@ -14,6 +14,13 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 
 class TaskFormViewModel(
@@ -39,7 +46,17 @@ class TaskFormViewModel(
                         it.copy(description = description)
                     }
                 },
-                topAppBarTitle = "Criando uma tarefa"
+                topAppBarTitle = "Criando uma tarefa",
+                onDueDateChange = { newDate ->
+                    _uiState.update {
+                        it.copy(dueDate = newDate.toBrazilianDateFormat())
+                    }
+                },
+                isShowDatePickerChange = { newValue ->
+                    _uiState.update {
+                        it.copy(showDatePicker = newValue)
+                    }
+                }
             )
         }
         id?.let {
@@ -60,6 +77,19 @@ class TaskFormViewModel(
                     }
             }
         }
+    }
+
+    @OptIn(FormatStringsInDatetimeFormats::class)
+    private fun Long?.toBrazilianDateFormat(): String? {
+        val formattedDate = this?.let { date ->
+            Instant.fromEpochMilliseconds(date)
+                .toLocalDateTime(TimeZone.UTC)
+                .date
+                .format(LocalDate.Format {
+                    byUnicodePattern("dd/MM/yyyy")
+                })
+        }
+        return formattedDate
     }
 
     suspend fun save() {

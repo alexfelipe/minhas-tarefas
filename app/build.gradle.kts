@@ -53,6 +53,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
