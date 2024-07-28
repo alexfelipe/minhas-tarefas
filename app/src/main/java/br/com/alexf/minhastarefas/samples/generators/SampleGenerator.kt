@@ -11,7 +11,8 @@ fun generateRandomTasks(
     Task(
         title = generateLoremIpsum(index),
         description = generateLoremIpsum(index * index),
-        isDone = index.mod(2) == 0
+        isDone = index.mod(2) == 0,
+        dueDate = if(index.mod(2) == 0) Random.nextLong(10000000000, 1000000000000) else null
     )
 }
 

@@ -195,6 +195,9 @@ fun TasksListScreen(
                             Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
+                            task.dueDate?.let {
+                                Text("${task.dateInBrazilianFormat}")
+                            }
                             Text(
                                 text = task.title, style = TextStyle.Default.copy(
                                     fontSize = 24.sp, fontWeight = FontWeight.Bold

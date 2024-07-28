@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
@@ -71,7 +72,8 @@ class TaskFormViewModel(
                                 topAppBarTitle = "Editando tarefa",
                                 title = task.title,
                                 description = task.description ?: "",
-                                isDeleteEnabled = true
+                                isDeleteEnabled = true,
+                                dueDate = task.dueDate.toBrazilianDateFormat()
                             )
                         }
                     }
@@ -92,13 +94,21 @@ class TaskFormViewModel(
         return formattedDate
     }
 
+    @OptIn(FormatStringsInDatetimeFormats::class)
     suspend fun save() {
         with(_uiState.value) {
             repository.save(
                 Task(
                     id = id ?: UUID.randomUUID().toString(),
                     title = title,
-                    description = description
+                    description = description,
+                    dueDate = dueDate?.let {
+                        LocalDate.parse(it, LocalDate.Format {
+                            byUnicodePattern("dd/MM/yyyy")
+                        })
+                            .atStartOfDayIn(TimeZone.UTC)
+                            .toEpochMilliseconds()
+                    }
                 )
             )
         }
